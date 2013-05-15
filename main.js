@@ -24,33 +24,35 @@
         this.discoveredGems = [GEMTYPES[0], GEMTYPES[1], GEMTYPES[2]];
         
         // Create new Gem
-        var currentGem;
+        var currentGemGroup;
 
-        this.newGem = function() {
-            currentGem = new Gem(this, this.discoveredGems[Math.floor(Math.random() * this.discoveredGems.length)], 0, 0);
+        this.newGemGroup = function() {
+            currentGemGroup = new GemGroup(this);
         };
 
-        this.newGem();
+        this.newGemGroup();
 
         // Bind a function to each keys
         var keys = {
             left: function() {
-                if (currentGem) {
-                    currentGem.move(currentGem.x - 1, currentGem.y);
+                if (currentGemGroup) {
+                    currentGemGroup.move(-1);
                 }
             },
             right: function() {
-                if (currentGem) {
-                    currentGem.move(currentGem.x + 1, currentGem.y);
+                if (currentGemGroup) {
+                    currentGemGroup.move(+1);
                 }
             },
             up: function() {
-
+                if(currentGemGroup) {
+                    currentGemGroup.rotate();
+                }
             },
             down: function() {
-                if (currentGem) {
-                    currentGem.drop();
-                    currentGem = false;
+                if (currentGemGroup) {
+                    currentGemGroup.drop();
+                    currentGemGroup = false;
                 }
             }
         };
@@ -168,6 +170,29 @@
             }
 
         }
+    }
+    
+    // GemGroup class
+    function GemGroup(game) {
+        
+        // Create 2 gems
+        var gems = {
+            first: new Gem(game, game.discoveredGems[Math.floor(Math.random() * game.discoveredGems.length)], 0, 0),
+            second: new Gem(game, game.discoveredGems[Math.floor(Math.random() * game.discoveredGems.length)], 0, 1)
+        };
+        
+        this.drop = function() {
+            
+        };
+        
+        this.move = function() {
+            
+        };
+        
+        this.rotate = function() {
+            
+        };
+    
     }
     
     // Gem class
