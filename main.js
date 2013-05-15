@@ -65,8 +65,22 @@
         
         var game = new Game(stage);
         var gem = new Gem(game, "blueDude", 2, 0);
-        gem.fall(2, 6);
-        stage.update();
+        
+        
+        key('left', function() {
+            // Move gem to left
+            gem.move(gem.x-1, gem.y);
+        });
+
+        key('right', function() {
+            // Move gem to right
+            gem.move(gem.x+1, gem.y);
+        });
+
+        key('down', function() {
+            // Drop gem
+            gem.fall(gem.x, 6);
+        });
 
     };
 
