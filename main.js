@@ -5,10 +5,8 @@
 
     // Margin top equal to 2 gems height
     var MARGINTOP = 2;
-
+    
     // Game class
-
-
     function Game(stage) {
 
         this.stage = stage;
@@ -103,11 +101,14 @@
 
                 var piece = fallingPieces[i];
                 
+                // Reference to current game
+                var game = this;
+                
                 // Make gem fall
                 piece.object.fall(piece.x, piece.y, function() {
                     hasFall += 1
                     if (hasFall === fallingPieces.length) {
-                        handleMatches();
+                        game.handleMatches();
                     }
                 });
 
