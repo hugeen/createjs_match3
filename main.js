@@ -41,7 +41,7 @@
             },
             right: function() {
                 if (currentGemGroup) {
-                    currentGemGroup.move(+1);
+                    currentGemGroup.move(1);
                 }
             },
             up: function() {
@@ -175,6 +175,8 @@
     // GemGroup class
     function GemGroup(game) {
         
+        var x = 0;
+        
         // Create 2 gems
         var gems = {
             first: new Gem(game, game.discoveredGems[Math.floor(Math.random() * game.discoveredGems.length)], 0, 0),
@@ -185,8 +187,10 @@
             
         };
         
-        this.move = function() {
-            
+        this.move = function(amount) {
+            x += amount;
+            gems.first.move(x, gems.first.y);
+            gems.second.move(x, gems.second.y);
         };
         
         this.rotate = function() {
