@@ -20,12 +20,14 @@
             height: 7,
             gravity: "down"
         });
-
+        
+        this.discoveredGems = [GEMTYPES[0], GEMTYPES[1], GEMTYPES[2]];
+        
         // Create new Gem
         var currentGem;
 
         this.newGem = function() {
-            currentGem = new Gem(this, GEMTYPES[Math.floor(Math.random() * GEMTYPES.length)], 0, 0);
+            currentGem = new Gem(this, this.discoveredGems[Math.floor(Math.random() * this.discoveredGems.length)], 0, 0);
         };
 
         this.newGem();
@@ -69,21 +71,34 @@
         // If matches have been found
         if (matches) {
             
+            // Initialize the array of pieces to upgrade
+            var piecesToUpgrade = [];
+            
             // For each match found
             this.grid.forEachMatch(function(matchingPieces, type) {
+                
+                
+                // For each match take the first piece to upgrade it
+                piecesToUpgrade.push({
+                    piece: matchingPieces[0],
+                    type: type
+                });
+                
                 for (var i in matchingPieces) {
                     var gem = matchingPieces[i].object;
                     
                     // Remove gem bitmap from stage
                     gem.game.stage.removeChild(gem.bitmap);
                 }
+                
             });
             
             // Remove matches and apply Gravity
             this.grid.clearMatches();
             
-            // Handle falling
-            
+            // Upgrade pieces
+            this.handleUpgrade(piecesToUpgrade);
+
         }
         
         this.handleFalling();
@@ -124,7 +139,37 @@
         }
 
     };
+    
+    
+    Game.prototype.handleUpgrade = function(piecesToUpgrade) {
+        
+        // For each piece to upgrade
+        for (var i in piecesToUpgrade) {
+            
+            // Get the piece
+            var pieceToUpgrade = piecesToUpgrade[i];
+            
+            // Get the upgraded type
+            var upgradedType = GEMTYPES[GEMTYPES.indexOf(pieceToUpgrade.type) + 1];
+            
+            // If the type is defined
+            if (typeof upgradedType !== "undefined") {
+                
+                // And if the type is not already discovered
+                if (this.discoveredGems.indexOf(upgradedType) === -1) {
+                    
+                    // Push it to discovered gems array
+                    this.discoveredGems.push(upgradedType);
+                }
+                
+                // And create a new piece
+                pieceToUpgrade.piece.object = new Gem(this, upgradedType, pieceToUpgrade.piece.x, pieceToUpgrade.piece.y + MARGINTOP);
+                
+            }
 
+        }
+    }
+    
     // Gem class
     function Gem(game, type, x, y) {
         this.game = game; // game reference
