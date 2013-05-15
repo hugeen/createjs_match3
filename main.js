@@ -325,6 +325,14 @@
 
             // And make it fall
             this.fall(lastEmpty.x, lastEmpty.y, callback);
+        } else {
+            
+            // Remove all bitmap
+            this.game.stage.removeAllChildren();
+            
+            // Game Over
+            gameOver();
+            
         }
     }
 
@@ -353,7 +361,13 @@
         });
 
         var game = new Game(stage);
-
+        
+        // Global game over function
+        window.gameOver = function() {
+            alert("Game Over - Your score : "+ game.score);
+            game = new Game(stage);
+        }
+        
         key('left', function() {
             game.handleKeyPressed('left');
         });
