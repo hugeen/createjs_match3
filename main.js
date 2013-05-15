@@ -172,16 +172,47 @@
         }
     }
     
+    Game.prototype.randomGemType = function() {
+        return this.discoveredGems[Math.floor(Math.random() * this.discoveredGems.length)];
+    }
+    
     // GemGroup class
     function GemGroup(game) {
         
         var x = 0;
         
+        // Define patterns
+        var patterns = [{
+            first: { x: 0, y: 0 },
+            second: { x: 0, y: 1 },
+            order: ['second', 'first']
+        }, {
+            first: { x: 1, y: 1 },
+            second: { x: 0, y: 1 },
+            order: ['second', 'first']
+        }, {
+            first: { x: 0, y: 1 },
+            second: { x: 0, y: 0 },
+            order: ['first', 'second']
+        }, {
+            first: { x: 0, y: 1 },
+            second: { x: 1, y: 1 },
+            order: ['first', 'second']
+        }];
+        
+        var currentPattern = 0;
+        
         // Create 2 gems
         var gems = {
-            first: new Gem(game, game.discoveredGems[Math.floor(Math.random() * game.discoveredGems.length)], 0, 0),
-            second: new Gem(game, game.discoveredGems[Math.floor(Math.random() * game.discoveredGems.length)], 0, 1)
+            first: new Gem(game, game.randomGemType(), x + patterns[currentPattern].first.x, patterns[currentPattern].first.y),
+            second: new Gem(game, game.randomGemType(), x + patterns[currentPattern].second.x, patterns[currentPattern].second.y)
         };
+        
+        this.updatePositions = function () {
+            var pattern = patterns[currentPattern];
+            gems.first.move(x + pattern.first.x, pattern.first.y);
+            gems.second.move(x + pattern.second.x, pattern.second.y);
+        }
         
         this.drop = function() {
             
@@ -189,12 +220,18 @@
         
         this.move = function(amount) {
             x += amount;
-            gems.first.move(x, gems.first.y);
-            gems.second.move(x, gems.second.y);
+            
+            // Update positions
+            this.updatePositions();
         };
         
         this.rotate = function() {
             
+            // Update the current pattern
+            currentPattern = (currentPattern + 1) % patterns.length;
+            
+            // Update positions
+            this.updatePositions();
         };
     
     }
