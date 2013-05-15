@@ -67,16 +67,59 @@
         
         // If matches have been found
         if (matches) {
+            
+            // For each match found
             this.grid.forEachMatch(function(matchingPieces, type) {
                 for (var i in matchingPieces) {
                     var gem = matchingPieces[i].object;
+                    
+                    // Remove gem bitmap from stage
                     gem.game.stage.removeChild(gem.bitmap);
                 }
             });
+            
+            // Remove matches and apply Gravity
             this.grid.clearMatches();
+            
+            // Handle falling
+            
+        }
+        
+        this.handleFalling();
+
+    };
+    
+    Game.prototype.handleFalling = function() {
+        
+        // Apply gravity and get falling Pieces
+        var fallingPieces = this.grid.applyGravity();
+        
+        if (fallingPieces.length > 0) {
+            // Falling counter
+            var hasFall = 0;
+
+            // For each falling pieces
+            for (var i in fallingPieces) {
+
+                var piece = fallingPieces[i];
+                
+                // Make gem fall
+                piece.object.fall(piece.x, piece.y, function() {
+                    hasFall += 1
+                    if (hasFall === fallingPieces.length) {
+                        handleMatches();
+                    }
+                });
+
+            }
+        } else {
+            
+            // Create a new gem if no falling pieces
+            this.newGem();
+            
         }
 
-    }
+    };
 
     // Gem class
     function Gem(game, type, x, y) {
@@ -115,15 +158,21 @@
             // Bind this gem to the piece
             lastEmpty.object = this;
             
+            
+            var gem = this;
+            
             // And make it fall
-            this.fall(lastEmpty.x, lastEmpty.y);
+            this.fall(lastEmpty.x, lastEmpty.y, function() {
+                gem.game.handleMatches();
+            });
         }
     }
 
     // Fall method
-    Gem.prototype.fall = function(x, y) {
+    Gem.prototype.fall = function(x, y, callback) {
+        
+        callback = callback || function() {};
 
-        var gem = this;
 
         // Create a tween animation
         createjs.Tween.get(this.bitmap).to({
@@ -131,9 +180,7 @@
             // End x position
             y: MARGINTOP * GEMSIZE + y * GEMSIZE // End y position
         }, 500, createjs.Ease.cubicOut).call(function() {
-            // Create new gem
-            gem.game.newGem();
-            gem.game.handleMatches();
+            callback();
         });
 
     };
