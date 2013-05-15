@@ -59,10 +59,26 @@
 
 
     }
+    
+    Game.prototype.handleMatches = function() {
+        
+        // Get all matches
+        var matches = this.grid.getMatches();
+        
+        // If matches have been found
+        if (matches) {
+            this.grid.forEachMatch(function(matchingPieces, type) {
+                for (var i in matchingPieces) {
+                    var gem = matchingPieces[i].object;
+                    gem.game.stage.removeChild(gem.bitmap);
+                }
+            });
+            this.grid.clearMatches();
+        }
+
+    }
 
     // Gem class
-
-
     function Gem(game, type, x, y) {
         this.game = game; // game reference
         this.type = type;
@@ -117,6 +133,7 @@
         }, 500, createjs.Ease.cubicOut).call(function() {
             // Create new gem
             gem.game.newGem();
+            gem.game.handleMatches();
         });
 
     };
