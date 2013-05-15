@@ -7,7 +7,7 @@ body {
   background-color: #cecece;
 }
 
-h1, h2 {
+h1, h2, #score {
   margin: 10px 0;
   font-family: inherit;
   color: inherit;
@@ -18,7 +18,7 @@ h1, h2 {
   letter-spacing: -1px;
 }
 
-h2 {
+h2, #score {
   font-size: 15px;
   letter-spacing: 0;
 }

@@ -11,7 +11,10 @@
     
     // Game class
     function Game(stage) {
-
+        
+        this.score = 0;
+        this.addToScore(0);
+        
         this.stage = stage;
 
         // Create a new jMatch3 Grid
@@ -76,9 +79,14 @@
             // Initialize the array of pieces to upgrade
             var piecesToUpgrade = [];
             
+            // Reference to the current game
+            var game = this;
+            
             // For each match found
             this.grid.forEachMatch(function(matchingPieces, type) {
                 
+                // Add to score
+                game.addToScore((GEMTYPES.indexOf(type) + 1) * matchingPieces.length);
                 
                 // For each match take the first piece to upgrade it
                 piecesToUpgrade.push({
@@ -170,11 +178,16 @@
             }
 
         }
-    }
+    };
     
     Game.prototype.randomGemType = function() {
         return this.discoveredGems[Math.floor(Math.random() * this.discoveredGems.length)];
-    }
+    };
+    
+    Game.prototype.addToScore = function(amount) {
+        this.score += amount;
+        document.getElementById("score").innerHTML = this.score;
+    };
     
     // GemGroup class
     function GemGroup(game) {
