@@ -136,7 +136,7 @@
         } else {
             
             // Create a new gem if no falling pieces
-            this.newGem();
+            this.newGemGroup();
             
         }
 
@@ -215,7 +215,27 @@
         }
         
         this.drop = function() {
+            // Get the pattern
+            var pattern = patterns[currentPattern];
             
+            // Drop counter
+            var dropped = 0;
+            
+            // Gems to drop
+            var gemsCount = pattern.order.length;
+            
+            // Drop gems in order
+            for (var i in pattern.order) {
+                gems[pattern.order[i]].drop(function() {
+                    dropped += 1;
+                    
+                    // If all gems have been dropped
+                    if (dropped === gemsCount) {
+                        game.handleMatches();
+                    }
+                    
+                });
+            }
         };
         
         this.move = function(amount) {
@@ -276,7 +296,7 @@
     };
 
     // Drop method
-    Gem.prototype.drop = function() {
+    Gem.prototype.drop = function(callback) {
         
         // Get the gem column
         var column = this.game.grid.getColumn(this.x);
@@ -289,14 +309,9 @@
             
             // Bind this gem to the piece
             lastEmpty.object = this;
-            
-            
-            var gem = this;
-            
+
             // And make it fall
-            this.fall(lastEmpty.x, lastEmpty.y, function() {
-                gem.game.handleMatches();
-            });
+            this.fall(lastEmpty.x, lastEmpty.y, callback);
         }
     }
 
@@ -305,15 +320,12 @@
         
         callback = callback || function() {};
 
-
         // Create a tween animation
         createjs.Tween.get(this.bitmap).to({
             x: x * GEMSIZE,
             // End x position
             y: MARGINTOP * GEMSIZE + y * GEMSIZE // End y position
-        }, 500, createjs.Ease.cubicOut).call(function() {
-            callback();
-        });
+        }, 500, createjs.Ease.cubicOut).call(callback);
 
     };
 
