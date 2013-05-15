@@ -6,6 +6,9 @@
     // Margin top equal to 2 gems height
     var MARGINTOP = 2;
     
+    // All gem types
+    var GEMTYPES = ["blueDude", "cyanDude", "greenDude", "magentaDude", "orangeDude", "pinkDude", "redDude", "yellowDude"];
+    
     // Game class
     function Game(stage) {
 
@@ -22,7 +25,7 @@
         var currentGem;
 
         this.newGem = function() {
-            currentGem = new Gem(this, "blueDude", 0, 0);
+            currentGem = new Gem(this, GEMTYPES[Math.floor(Math.random() * GEMTYPES.length)], 0, 0);
         };
 
         this.newGem();
