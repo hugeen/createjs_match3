@@ -219,7 +219,18 @@
         };
         
         this.move = function(amount) {
-            x += amount;
+            
+            // new x position
+            var newX = x + amount;
+            
+            // if current pattern is 1 or 3 max x is 4
+            var maxX = (currentPattern === 1 || currentPattern === 3) ? 4 : 5;
+            
+            // if x is >= to 0 and <0 maxX
+            if (newX >= 0 && newX <= maxX) {
+                // we can update x
+                x = newX;
+            }
             
             // Update positions
             this.updatePositions();
@@ -229,6 +240,12 @@
             
             // Update the current pattern
             currentPattern = (currentPattern + 1) % patterns.length;
+            
+            // If x is 5 and current pattern is 1 or 3
+            if (x === 5 && (currentPattern === 1 || currentPattern === 3)) {
+                // We must set x to 4
+                x = 4;
+            }
             
             // Update positions
             this.updatePositions();
