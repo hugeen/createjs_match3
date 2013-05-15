@@ -359,8 +359,24 @@
         createjs.Ticker.addEventListener("tick", function(event) {
             stage.update(event);
         });
-
-        var game = new Game(stage);
+        
+        var game;
+        
+        var preload = new createjs.LoadQueue();
+        preload.addEventListener("complete", function() {
+            game = new Game(stage);
+        });
+        
+        preload.loadManifest([
+            "assets/blueDude.png",
+            "assets/cyanDude.png",
+            "assets/greenDude.png",
+            "assets/magentaDude.png",
+            "assets/orangeDude.png",
+            "assets/pinkDude.png",
+            "assets/redDude.png",
+            "assets/yellowDude.png"
+        ]);
         
         // Global game over function
         window.gameOver = function() {
